@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chudial 🤍</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=DM+Serif+Display:ital@0;1&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #faf3ed; --warm-white: #fdf8f4; --blush: #f2c4b0;
+      --coral: #d96b52; --dark: #2c1f14; --medium: #6b4c3b; --gold: #e8c84a;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--cream); font-family: 'Lato', sans-serif; color: var(--dark); overflow-x: hidden; }
+
+    #hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 24px; background: radial-gradient(ellipse at 60% 30%, #fde8df 0%, #faf3ed 60%); position: relative; }
+    .hero-avatar { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid var(--blush); box-shadow: 0 0 0 6px rgba(242,196,176,0.3); margin-bottom: 20px; animation: fadeDown 0.8s ease both; }
+    .hero-avatar-placeholder { width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, #f2c4b0, #e8a090); border: 3px solid var(--blush); box-shadow: 0 0 0 6px rgba(242,196,176,0.3); margin-bottom: 20px; animation: fadeDown 0.8s ease both; display: flex; align-items: center; justify-content: center; font-size: 36px; }
+    .pill-label { display: inline-block; border: 1px solid var(--blush); border-radius: 999px; padding: 5px 18px; font-size: 10px; letter-spacing: 2px; color: var(--medium); margin-bottom: 20px; animation: fadeDown 0.9s ease both; }
+    .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(52px, 15vw, 96px); line-height: 1; margin-bottom: 16px; animation: fadeDown 1s ease both; }
+    .hero-title span.black { color: var(--dark); font-weight: 900; }
+    .hero-title span.coral { color: var(--coral); font-style: italic; font-weight: 700; }
+    .hero-sub { font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(14px, 4vw, 18px); color: var(--medium); max-width: 320px; line-height: 1.6; animation: fadeDown 1.1s ease both; }
+    .scroll-hint { position: absolute; bottom: 36px; display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--medium); font-size: 10px; letter-spacing: 2px; animation: bounce 2s infinite; }
+    .scroll-hint svg { width: 18px; height: 18px; stroke: var(--coral); }
+
+    #strip { background: var(--warm-white); padding: 32px 0; overflow: hidden; }
+    .strip-track { display: flex; gap: 12px; animation: scrollStrip 28s linear infinite; width: max-content; }
+    .strip-track:hover { animation-play-state: paused; }
+    .strip-img { width: 90px; height: 120px; border-radius: 14px; object-fit: cover; flex-shrink: 0; }
+
+    #grid { padding: 60px 20px; max-width: 500px; margin: 0 auto; }
+    .section-eyebrow { font-size: 10px; letter-spacing: 3px; color: var(--coral); text-transform: uppercase; margin-bottom: 10px; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 8vw, 40px); font-weight: 900; margin-bottom: 28px; line-height: 1.2; }
+    .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .photo-item { position: relative; border-radius: 16px; overflow: hidden; aspect-ratio: 3/4; cursor: pointer; }
+    .photo-item.wide { grid-column: span 2; aspect-ratio: 16/9; }
+    .photo-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease; }
+    .photo-item:hover img { transform: scale(1.04); }
+    .photo-item.rotate-item:hover img { transform: scale(1.04) rotate(180deg); }
+    .photo-caption { position: absolute; bottom: 10px; left: 10px; font-size: 9px; letter-spacing: 1.5px; font-weight: 700; color: white; text-transform: uppercase; text-shadow: 0 1px 4px rgba(0,0,0,0.4); }
+
+    #reasons { background: var(--warm-white); padding: 60px 20px; }
+    .reasons-inner { max-width: 500px; margin: 0 auto; }
+    .reason-card { background: white; border-radius: 18px; padding: 22px; margin-bottom: 14px; box-shadow: 0 2px 12px rgba(44,31,20,0.06); opacity: 0; transform: translateY(30px); transition: all 0.6s ease; display: flex; gap: 16px; align-items: flex-start; }
+    .reason-card.visible { opacity: 1; transform: translateY(0); }
+    .reason-num { font-family: 'Playfair Display', serif; font-size: 13px; color: var(--coral); font-weight: 700; min-width: 24px; padding-top: 2px; }
+    .reason-text h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--dark); }
+    .reason-text p { font-size: 13px; color: var(--medium); line-height: 1.6; }
+
+    #letter { padding: 60px 20px; max-width: 500px; margin: 0 auto; }
+    .letter-card { background: var(--dark); border-radius: 24px; padding: 36px 28px; color: white; position: relative; overflow: hidden; }
+    .letter-card::before { content: '\201C'; position: absolute; top: -10px; left: 20px; font-size: 120px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.07); line-height: 1; pointer-events: none; }
+    .letter-eyebrow { font-size: 9px; letter-spacing: 3px; color: var(--blush); text-transform: uppercase; margin-bottom: 12px; }
+    .letter-name { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; margin-bottom: 20px; }
+    .letter-body p { font-size: 14px; line-height: 1.8; color: rgba(255,255,255,0.85); margin-bottom: 16px; }
+    .letter-sign { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 16px; color: var(--blush); margin-top: 8px; }
+
+    #closing { background: var(--cream); padding: 60px 20px 80px; text-align: center; }
+    .closing-inner { max-width: 500px; margin: 0 auto; }
+    .tags-eyebrow { font-size: 10px; letter-spacing: 3px; color: var(--medium); text-transform: uppercase; margin-bottom: 10px; }
+    .tags-title { font-family: 'Playfair Display', serif; font-size: clamp(26px, 7vw, 36px); font-weight: 900; margin-bottom: 24px; }
+    .tags-wrap { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 40px; }
+    .tag { padding: 8px 16px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; transition: transform 0.2s ease; cursor: default; }
+    .tag:hover { transform: scale(1.08); }
+    .tag.dark { background: var(--dark); color: white; }
+    .tag.light { background: rgba(242,196,176,0.4); color: var(--dark); border: 1px solid var(--blush); }
+    .big-quote { font-family: 'Playfair Display', serif; font-size: clamp(22px, 6vw, 32px); font-weight: 900; line-height: 1.3; margin-bottom: 10px; }
+    .big-quote em { font-style: italic; color: var(--coral); }
+    .send-btn { display: inline-block; margin-top: 30px; background: var(--coral); color: white; border: none; border-radius: 999px; padding: 14px 36px; font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.5px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .send-btn:hover { transform: scale(1.05); box-shadow: 0 8px 24px rgba(217,107,82,0.4); }
+    .footer-note { margin-top: 48px; font-size: 12px; color: var(--coral); font-family: 'DM Serif Display', serif; font-style: italic; }
+
+    #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+    /* LIGHTBOX */
+    .lightbox-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 99999; align-items: center; justify-content: center; padding: 20px; }
+    .lightbox-overlay.active { display: flex; }
+    .lightbox-overlay img { max-width: 95vw; max-height: 90vh; object-fit: contain; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); animation: lightboxIn 0.25s ease both; }
+    .lightbox-close { position: absolute; top: 20px; right: 24px; font-size: 36px; color: white; cursor: pointer; line-height: 1; z-index: 100000; }
+
+    @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+    @keyframes scrollStrip { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @keyframes lightboxIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+  </style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<section id="hero">
+  <img class="hero-avatar" src="images/4.jpeg" alt="Chudial" />
+  <div class="pill-label">A MESSAGE JUST FOR YOU ✨</div>
+  <div class="hero-title"><span class="black">Chu</span><span class="coral">dial</span></div>
+  <p class="hero-sub">You are more than enough, always have been.</p>
+  <div class="scroll-hint">SCROLL<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+</section>
+
+<section id="strip"><div class="strip-track" id="stripTrack"></div></section>
+
+<section id="grid">
+  <p class="section-eyebrow">HER STORY IN FRAMES</p>
+  <h2 class="section-title">Look at this girl go 🔥</h2>
+  <div class="photo-grid" id="photoGrid"></div>
+</section>
+
+<div class="lightbox-overlay" id="lightbox">
+  <span class="lightbox-close" onclick="closeLightbox()">✕</span>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<section id="reasons">
+  <div class="reasons-inner">
+    <p class="section-eyebrow">BECAUSE YOU NEED TO HEAR IT</p>
+    <h2 class="section-title">Why you are absolutely incredible</h2>
+    <div class="reason-card" data-animate><div class="reason-num">01</div><div class="reason-text"><h3>You earned those medals.</h3><p>While others were comfortable, you were out there putting in the work. That doesn't just happen — that's YOU.</p></div></div>
+    <div class="reason-card" data-animate><div class="reason-num">02</div><div class="reason-text"><h3>The gym grind is no joke.</h3><p>Discipline like yours comes from deep self-respect. You show up for yourself even when it's hard.</p></div></div>
+    <div class="reason-card" data-animate><div class="reason-num">03</div><div class="reason-text"><h3>You show up for people.</h3><p>The way you love your friends — that's a rare kind of beautiful. Your people are lucky to have you.</p></div></div>
+    <div class="reason-card" data-animate><div class="reason-num">04</div><div class="reason-text"><h3>Your smile lights up a room.</h3><p>Not just a saying — people around you actually feel it. Every. Single. Time.</p></div></div>
+    <div class="reason-card" data-animate><div class="reason-num">05</div><div class="reason-text"><h3>You didn't lose anything.</h3><p>Someone lost YOU. Read that again. And again. Let it sink in. 💛</p></div></div>
+  </div>
+</section>
+
+<section id="letter">
+  <div class="letter-card">
+    <div class="letter-eyebrow">FROM SOMEONE WHO KNOWS</div>
+    <div class="letter-name">Hey Chudial,</div>
+    <div class="letter-body">
+      <p>Last night was rough, and that's okay. You're allowed to feel it all.</p>
+      <p>But please don't you dare let this make you forget who you are — a woman who wins medals, grinds at the gym, lights up every room she walks into, and looks absolutely stunning while doing all of it.</p>
+      <p>You are not a chapter in someone else's story. You are the whole damn book. And your best pages? They haven't even been written yet. 💛</p>
+    </div>
+    <div class="letter-sign">— Vishal, your person, always 🤍</div>
+  </div>
+</section>
+
+<section id="closing">
+  <div class="closing-inner">
+    <p class="tags-eyebrow">SAY IT LOUDER</p>
+    <h2 class="tags-title">She is:</h2>
+    <div class="tags-wrap">
+      <span class="tag light">A Champion 🏅</span><span class="tag dark">Gorgeous</span>
+      <span class="tag light">Gym girl 💪</span><span class="tag dark">Funny as hell</span>
+      <span class="tag light">Loyal to the core</span><span class="tag dark">Always glowing ✨</span>
+      <span class="tag light">Unstoppable</span><span class="tag dark">Curly hair queen 👑</span>
+      <span class="tag light">Fierce 🔥</span><span class="tag dark">The best friend</span>
+      <span class="tag light">More than enough</span><span class="tag dark">Deeply loved 💛</span>
+    </div>
+    <div class="big-quote">His loss is just the universe<br>making room for something<br><em>far better.</em></div>
+    <button class="send-btn" onclick="popConfetti()">Send love 💛</button>
+    <div class="footer-note">Made with so much love, just for Chudial 🌸</div>
+  </div>
+</section>
+
+<script>
+  /* STRIP */
+  const stripPhotos = [
+    'images/1.jpg','images/2.jpeg','images/3.jpg','images/4.jpeg','images/5.jpeg',
+    'images/6.jpeg','images/7.jpeg','images/8.jpeg','images/9.jpeg','images/10.jpeg',
+    'images/11.jpeg','images/12.jpeg','images/13.jpeg','images/14.jpeg','images/15.jpeg',
+    'images/16.jpeg','images/17.jpeg','images/18.jpeg','images/19.jpg','images/20.jpeg',
+    'images/21.jpeg','images/22.jpeg','images/23.jpeg','images/24.jpeg','images/25.jpeg',
+  ];
+  const track = document.getElementById('stripTrack');
+  [...stripPhotos, ...stripPhotos].forEach(src => {
+    const img = document.createElement('img');
+    img.src = src; img.className = 'strip-img'; img.alt = '';
+    track.appendChild(img);
+  });
+
+  /* PHOTO GRID */
+  const gridData = [
+    { photo: 'images/1.jpg',   label: 'GYM MODE 💪',            wide: false },
+    { photo: 'images/4.jpeg',  label: 'ABSOLUTELY STUNNING ✨',  wide: false },
+    { photo: 'images/15.jpeg', label: 'THAT LOOK 🔥',           wide: false },
+    { photo: 'images/2.jpeg',  label: 'A WHOLE VIBE 🌸',        wide: false },
+    { photo: 'images/16.jpeg', label: 'CHAMPION ENERGY 🏅',     wide: true,  rotate: true },
+    { photo: 'images/6.jpeg',  label: 'THAT SMILE ⭐',          wide: false },
+    { photo: 'images/22.jpeg', label: 'SOFT GIRL ERA 🌻',       wide: false },
+    { photo: 'images/11.jpeg', label: 'SQUAD GOALS 👯',         wide: false },
+    { photo: 'images/17.jpeg', label: 'REAL ONES 🤍',           wide: false },
+    { photo: 'images/3.jpg',   label: 'SHOPPING QUEEN 🛍️',      wide: false },
+    { photo: 'images/25.jpeg', label: 'BIG HEART 🤝',           wide: false },
+    { photo: 'images/19.jpg',  label: 'POET SOUL 🎤',           wide: true  },
+  ];
+
+  const photoGrid = document.getElementById('photoGrid');
+  gridData.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'photo-item' + (item.wide ? ' wide' : '') + (item.rotate ? ' rotate-item' : '');
+
+    const img = document.createElement('img');
+    img.src = item.photo;
+    img.alt = item.label;
+    img.style.cursor = 'pointer';
+
+    if (item.rotate) {
+      img.style.transform = 'rotate(180deg)';
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+    }
+
+    img.addEventListener('click', () => openLightbox(item.photo, item.rotate));
+
+    const cap = document.createElement('div');
+    cap.className = 'photo-caption';
+    cap.textContent = item.label;
+
+    div.appendChild(img);
+    div.appendChild(cap);
+    photoGrid.appendChild(div);
+  });
+
+  /* LIGHTBOX */
+  function openLightbox(src, rotated) {
+    const lbImg = document.getElementById('lightbox-img');
+    lbImg.src = src;
+    lbImg.style.transform = rotated ? 'rotate(180deg)' : 'none';
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+  });
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+  /* SCROLL ANIMATIONS */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) setTimeout(() => entry.target.classList.add('visible'), i * 100);
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
+
+  /* CONFETTI */
+  function popConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    const colors = ['#d96b52','#f2c4b0','#e8c84a','#2c1f14','#ffffff','#f5a891'];
+    const pieces = Array.from({ length: 120 }, () => ({
+      x: Math.random() * canvas.width, y: -10,
+      r: Math.random() * 8 + 4, d: Math.random() * 4 + 2,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      tilt: Math.random() * 20 - 10, tiltAngle: 0, tiltSpeed: Math.random() * 0.1 + 0.05,
+    }));
+    let frame = 0;
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      pieces.forEach(p => {
+        p.tiltAngle += p.tiltSpeed; p.y += p.d; p.x += Math.sin(p.tiltAngle) * 1.5; p.tilt = Math.sin(p.tiltAngle) * 12;
+        ctx.beginPath(); ctx.lineWidth = p.r; ctx.strokeStyle = p.color;
+        ctx.moveTo(p.x + p.tilt + p.r / 2, p.y); ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2); ctx.stroke();
+      });
+      frame++;
+      if (frame < 200) requestAnimationFrame(draw);
+      else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    draw();
+  }
+</script>
+</body>
+</html>
